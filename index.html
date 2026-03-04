@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Subverse</title>
+
+<style>
+body{
+font-family: Arial;
+background:#0f172a;
+color:white;
+text-align:center;
+margin:0;
+}
+
+header{
+padding:20px;
+background:#1e293b;
+font-size:28px;
+font-weight:bold;
+}
+
+.container{
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+margin-top:40px;
+gap:20px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+width:220px;
+}
+
+button{
+background:#3b82f6;
+border:none;
+padding:10px 15px;
+border-radius:5px;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#2563eb;
+}
+</style>
+
+</head>
+<body>
+
+<header>Subverse</header>
+
+<h2>Subscriptions</h2>
+
+<div class="container">
+
+<div class="card">
+<h3>Spotify Premium</h3>
+<p>1 Month</p>
+<p>9 CHF</p>
+<button onclick="buy('Spotify 1 Month')">Buy</button>
+</div>
+
+<div class="card">
+<h3>Crunchyroll</h3>
+<p>3 Months</p>
+<p>20 CHF</p>
+<button onclick="buy('Crunchyroll 3 Months')">Buy</button>
+</div>
+
+<div class="card">
+<h3>ChatGPT Plus</h3>
+<p>1 Month</p>
+<p>22 CHF</p>
+<button onclick="buy('ChatGPT 1 Month')">Buy</button>
+</div>
+
+<div class="card">
+<h3>Prime Video</h3>
+<p>6 Months</p>
+<p>35 CHF</p>
+<button onclick="buy('Prime Video 6 Months')">Buy</button>
+</div>
+
+</div>
+
+<script>
+function buy(product){
+alert("You selected: " + product);
+}
+</script>
+
+</body>
+</html>
