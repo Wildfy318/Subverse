@@ -1,98 +1,628 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>Subverse</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Subverse — Subscriptions</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --panel:#0f1b33;
+      --panel2:#101f3d;
+      --text:#e7eefc;
+      --muted:#a9b8d6;
+      --brand:#3b82f6;
+      --brand2:#22c55e;
+      --danger:#ef4444;
+      --border:rgba(255,255,255,.10);
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 15% 10%, rgba(59,130,246,.22), transparent 60%),
+                  radial-gradient(900px 500px at 85% 20%, rgba(34,197,94,.18), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1150px;margin:0 auto;padding:28px 18px 90px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:14px;margin-bottom:22px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;
+      font-weight:800;letter-spacing:.2px;font-size:18px;
+    }
+    .logo{
+      width:42px;height:42px;border-radius:14px;
+      background: linear-gradient(135deg, rgba(59,130,246,1), rgba(34,197,94,1));
+      display:grid;place-items:center;
+      box-shadow: var(--shadow);
+    }
+    .logo svg{filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
+    .actions{display:flex;align-items:center;gap:10px}
+    .pill{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 12px;border:1px solid var(--border);
+      border-radius:999px;background:rgba(255,255,255,.04);
+      color:var(--muted);font-size:13px;
+    }
+    .btn{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      padding:10px 12px;border-radius:12px;
+      cursor:pointer;
+      transition:.15s transform, .15s background, .15s border;
+    }
+    .btn:hover{transform: translateY(-1px);background:rgba(255,255,255,.08)}
+    .btn.primary{
+      background:linear-gradient(135deg, rgba(59,130,246,1), rgba(34,197,94,1));
+      border-color:transparent;
+      font-weight:700;
+    }
+    .btn.danger{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.35)}
+    .btn.danger:hover{background:rgba(239,68,68,.18)}
+    .hero{
+      display:grid;grid-template-columns: 1.2fr .8fr;
+      gap:16px;align-items:stretch;margin-bottom:18px;
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .heroLeft{padding:22px 22px 18px}
+    .hero h1{margin:0 0 10px;font-size:34px;line-height:1.1}
+    .hero p{margin:0 0 14px;color:var(--muted);max-width:56ch}
+    .badges{display:flex;flex-wrap:wrap;gap:10px}
+    .badge{
+      padding:9px 10px;border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      font-size:13px;color:var(--muted);
+    }
+    .heroRight{padding:18px}
+    .miniGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .mini{
+      padding:12px;border-radius:16px;
+      border:1px solid var(--border);
+      background:rgba(0,0,0,.18);
+    }
+    .mini .t{font-weight:800}
+    .mini .s{color:var(--muted);font-size:12px;margin-top:6px}
 
-<style>
-body{
-font-family: Arial;
-background:#0f172a;
-color:white;
-text-align:center;
-margin:0;
-}
+    .toolbar{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+      margin:16px 0 14px;
+    }
+    .search{
+      flex:1;min-width:220px;
+      display:flex;align-items:center;gap:10px;
+      padding:12px 14px;border-radius:14px;
+      border:1px solid var(--border);background:rgba(255,255,255,.04);
+    }
+    .search input{
+      flex:1;border:none;outline:none;background:transparent;color:var(--text);
+      font-size:14px;
+    }
+    .select{
+      padding:12px 12px;border-radius:14px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      outline:none;
+      min-width:170px;
+    }
 
-header{
-padding:20px;
-background:#1e293b;
-font-size:28px;
-font-weight:bold;
-}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:14px;
+    }
+    .product{
+      grid-column: span 4;
+      padding:16px;
+      display:flex;flex-direction:column;gap:12px;
+      min-height: 230px;
+    }
+    @media (max-width: 960px){
+      .hero{grid-template-columns:1fr}
+      .product{grid-column: span 6}
+    }
+    @media (max-width: 640px){
+      .product{grid-column: span 12}
+    }
+    .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .name{font-weight:900;font-size:16px}
+    .muted{color:var(--muted);font-size:13px}
+    .chip{
+      padding:7px 10px;border-radius:999px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      font-size:12px;color:var(--muted);
+      white-space:nowrap;
+    }
+    .price{font-size:18px;font-weight:900}
+    .divider{height:1px;background:var(--border);margin:2px 0}
+    .durationRow{display:flex;gap:8px;flex-wrap:wrap}
+    .durBtn{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      padding:9px 10px;border-radius:999px;
+      cursor:pointer;font-size:13px;
+    }
+    .durBtn.active{
+      background:rgba(59,130,246,.22);
+      border-color:rgba(59,130,246,.45);
+    }
+    .small{font-size:12px;color:var(--muted)}
 
-.container{
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-margin-top:40px;
-gap:20px;
-}
+    /* Cart Drawer */
+    .cartFab{
+      position:fixed;right:18px;bottom:18px;
+      display:flex;align-items:center;gap:10px;
+      padding:12px 14px;border-radius:999px;
+      background:linear-gradient(135deg, rgba(59,130,246,1), rgba(34,197,94,1));
+      color:white;border:none;cursor:pointer;
+      box-shadow: var(--shadow);
+      font-weight:800;
+    }
+    .cartFab .count{
+      background:rgba(0,0,0,.25);
+      padding:4px 8px;border-radius:999px;
+      font-size:12px;
+    }
+    .overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,.55);
+      display:none;
+    }
+    .overlay.open{display:block}
+    .drawer{
+      position:fixed;top:0;right:0;height:100vh;width:min(430px, 92vw);
+      background: linear-gradient(180deg, rgba(15,27,51,.98), rgba(11,18,32,.98));
+      border-left:1px solid var(--border);
+      transform: translateX(105%);
+      transition: .2s transform;
+      box-shadow: var(--shadow);
+      display:flex;flex-direction:column;
+    }
+    .drawer.open{transform: translateX(0)}
+    .drawerHeader{
+      padding:16px;border-bottom:1px solid var(--border);
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+    }
+    .drawerHeader h3{margin:0;font-size:16px}
+    .drawerBody{padding:12px 16px;overflow:auto;flex:1}
+    .cartItem{
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.04);
+      border-radius:16px;
+      padding:12px;margin-bottom:10px;
+    }
+    .cartItem .title{font-weight:900}
+    .cartItem .meta{color:var(--muted);font-size:12px;margin-top:4px}
+    .qtyRow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px}
+    .qtyControls{display:flex;align-items:center;gap:8px}
+    .iconBtn{
+      width:34px;height:34px;border-radius:10px;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      cursor:pointer;
+    }
+    .totalBox{
+      padding:14px 16px;border-top:1px solid var(--border);
+      background:rgba(255,255,255,.03);
+    }
+    .totalRow{display:flex;align-items:center;justify-content:space-between}
+    .footNote{color:var(--muted);font-size:12px;margin:10px 0 0}
+    .empty{
+      color:var(--muted);text-align:center;margin-top:26px;
+      padding:18px;border:1px dashed rgba(255,255,255,.18);border-radius:16px;
+    }
 
-.card{
-background:#1e293b;
-padding:20px;
-border-radius:10px;
-width:220px;
-}
-
-button{
-background:#3b82f6;
-border:none;
-padding:10px 15px;
-border-radius:5px;
-color:white;
-cursor:pointer;
-}
-
-button:hover{
-background:#2563eb;
-}
-</style>
-
+    /* Toast */
+    .toast{
+      position:fixed;left:50%;top:16px;transform:translateX(-50%);
+      background:rgba(15,27,51,.92);
+      border:1px solid var(--border);
+      padding:10px 12px;border-radius:12px;
+      display:none;gap:10px;align-items:center;
+      box-shadow: var(--shadow);
+      max-width:min(560px, 92vw);
+      color:var(--text);
+    }
+    .toast.show{display:flex}
+    .dot{
+      width:10px;height:10px;border-radius:999px;background:var(--brand2);
+      box-shadow:0 0 0 6px rgba(34,197,94,.15);
+    }
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M9.5 7.5v9l8-4.5-8-4.5Z" fill="white"/>
+          </svg>
+        </div>
+        <div>Subverse</div>
+      </div>
 
-<header>Subverse</header>
+      <div class="actions">
+        <div class="pill" title="Demo-Website (keine echten Zahlungen)">
+          Demo Shop · CHF · 🇨🇭
+        </div>
+        <button class="btn" id="openCartTop">Warenkorb</button>
+        <button class="btn primary" id="scrollShop">Shop ansehen</button>
+      </div>
+    </div>
 
-<h2>Subscriptions</h2>
+    <section class="hero">
+      <div class="card heroLeft">
+        <h1>Alle Subscriptions.<br/>Ein Ort.</h1>
+        <p>
+          Wähle deine Plattform, entscheide die Laufzeit (1/3/6/12 Monate) und lege alles in den Warenkorb.
+          Diese Seite ist ein <b>Test</b> – später kannst du Checkout (Stripe/PayPal) hinzufügen.
+        </p>
+        <div class="badges">
+          <div class="badge">⚡ Schnelle Auswahl</div>
+          <div class="badge">🛒 Warenkorb</div>
+          <div class="badge">📱 Mobile Ready</div>
+          <div class="badge">🌍 Später global</div>
+        </div>
+      </div>
+      <div class="card heroRight">
+        <div class="miniGrid">
+          <div class="mini">
+            <div class="t">Beliebt</div>
+            <div class="s">Spotify, Prime, ChatGPT</div>
+          </div>
+          <div class="mini">
+            <div class="t">Laufzeiten</div>
+            <div class="s">1 / 3 / 6 / 12 Monate</div>
+          </div>
+          <div class="mini">
+            <div class="t">Währung</div>
+            <div class="s">CHF (später EUR/USD)</div>
+          </div>
+          <div class="mini">
+            <div class="t">Checkout</div>
+            <div class="s">Demo (später Stripe)</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<div class="container">
+    <div class="toolbar" id="shop">
+      <div class="search">
+        🔎
+        <input id="q" placeholder="Suchen (z.B. Spotify, Prime, ChatGPT) …" />
+      </div>
+      <select class="select" id="sort">
+        <option value="popular">Sortieren: Beliebt</option>
+        <option value="az">Sortieren: A–Z</option>
+        <option value="priceLow">Preis: niedrig → hoch (1 Monat)</option>
+        <option value="priceHigh">Preis: hoch → niedrig (1 Monat)</option>
+      </select>
+      <select class="select" id="currency">
+        <option value="CHF">Währung: CHF</option>
+        <option value="EUR">Währung: EUR (Demo)</option>
+        <option value="USD">Währung: USD (Demo)</option>
+      </select>
+    </div>
 
-<div class="card">
-<h3>Spotify Premium</h3>
-<p>1 Month</p>
-<p>9 CHF</p>
-<button onclick="buy('Spotify 1 Month')">Buy</button>
-</div>
+    <div class="grid" id="grid"></div>
+  </div>
 
-<div class="card">
-<h3>Crunchyroll</h3>
-<p>3 Months</p>
-<p>20 CHF</p>
-<button onclick="buy('Crunchyroll 3 Months')">Buy</button>
-</div>
+  <!-- Cart -->
+  <button class="cartFab" id="cartFab" aria-label="Warenkorb öffnen">
+    🛒 Warenkorb <span class="count" id="cartCount">0</span>
+  </button>
 
-<div class="card">
-<h3>ChatGPT Plus</h3>
-<p>1 Month</p>
-<p>22 CHF</p>
-<button onclick="buy('ChatGPT 1 Month')">Buy</button>
-</div>
+  <div class="overlay" id="overlay"></div>
+  <aside class="drawer" id="drawer" aria-label="Warenkorb">
+    <div class="drawerHeader">
+      <h3>Warenkorb</h3>
+      <button class="btn" id="closeCart">Schliessen</button>
+    </div>
+    <div class="drawerBody" id="cartBody">
+      <!-- items -->
+    </div>
+    <div class="totalBox">
+      <div class="totalRow">
+        <div class="muted">Total</div>
+        <div class="price" id="total">CHF 0.00</div>
+      </div>
+      <button class="btn primary" style="width:100%;margin-top:10px" id="checkout">
+        Checkout (Demo)
+      </button>
+      <div class="footNote">
+        Hinweis: Testseite ohne echte Zahlungen. Für Live-Verkäufe später Stripe/PayPal anbinden.
+      </div>
+    </div>
+  </aside>
 
-<div class="card">
-<h3>Prime Video</h3>
-<p>6 Months</p>
-<p>35 CHF</p>
-<button onclick="buy('Prime Video 6 Months')">Buy</button>
-</div>
-
-</div>
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <div class="dot"></div>
+    <div id="toastMsg">Zum Warenkorb hinzugefügt</div>
+  </div>
 
 <script>
-function buy(product){
-alert("You selected: " + product);
-}
-</script>
+  // --- Demo Data (du kannst Preise später anpassen) ---
+  const PRODUCTS = [
+    { id:"spotify", name:"Spotify Premium", tag:"Music", popular:1, base:{CHF:9,  EUR:9,  USD:9} },
+    { id:"crunchy", name:"Crunchyroll",     tag:"Anime", popular:2, base:{CHF:8,  EUR:8,  USD:8} },
+    { id:"prime",   name:"Prime Video",     tag:"Streaming", popular:3, base:{CHF:6,  EUR:6,  USD:6} },
+    { id:"chatgpt", name:"ChatGPT Plus",    tag:"AI", popular:4, base:{CHF:22, EUR:22, USD:22} },
+    { id:"claude",  name:"Claude Pro",      tag:"AI", popular:5, base:{CHF:22, EUR:22, USD:22} },
+  ];
 
+  // Laufzeiten & Multiplikatoren (einfach, kann man später mit Rabatten erweitern)
+  const DURATIONS = [
+    { months:1,  label:"1 Monat",  mult:1 },
+    { months:3,  label:"3 Monate", mult:3 * 0.97 },   // kleines Bundle-Discount
+    { months:6,  label:"6 Monate", mult:6 * 0.94 },
+    { months:12, label:"12 Monate",mult:12 * 0.88 },
+  ];
+
+  // --- State ---
+  const state = {
+    currency: "CHF",
+    query: "",
+    sort: "popular",
+    // selected duration per product (default 1)
+    selectedDuration: Object.fromEntries(PRODUCTS.map(p => [p.id, 1])),
+    cart: [] // {key, id, name, months, unit, qty}
+  };
+
+  // --- Helpers ---
+  const money = (amt) => {
+    const cur = state.currency;
+    const n = Number(amt || 0);
+    return `${cur} ${n.toFixed(2)}`;
+  };
+
+  function unitPrice(productId, months){
+    const p = PRODUCTS.find(x => x.id === productId);
+    const base = p.base[state.currency];
+    const d = DURATIONS.find(x => x.months === months);
+    return base * d.mult;
+  }
+
+  function cartKey(id, months){ return `${id}__${months}`; }
+
+  function toast(msg){
+    const el = document.getElementById("toast");
+    document.getElementById("toastMsg").textContent = msg;
+    el.classList.add("show");
+    clearTimeout(window.__t);
+    window.__t = setTimeout(()=> el.classList.remove("show"), 1500);
+  }
+
+  // --- Render Products ---
+  function renderGrid(){
+    const grid = document.getElementById("grid");
+    const q = state.query.trim().toLowerCase();
+
+    let list = PRODUCTS.filter(p =>
+      !q || p.name.toLowerCase().includes(q) || p.tag.toLowerCase().includes(q)
+    );
+
+    if(state.sort === "az"){
+      list.sort((a,b)=> a.name.localeCompare(b.name));
+    } else if(state.sort === "priceLow"){
+      list.sort((a,b)=> unitPrice(a.id,1) - unitPrice(b.id,1));
+    } else if(state.sort === "priceHigh"){
+      list.sort((a,b)=> unitPrice(b.id,1) - unitPrice(a.id,1));
+    } else {
+      list.sort((a,b)=> a.popular - b.popular);
+    }
+
+    grid.innerHTML = "";
+    for(const p of list){
+      const months = state.selectedDuration[p.id] || 1;
+      const price = unitPrice(p.id, months);
+
+      const card = document.createElement("div");
+      card.className = "card product";
+      card.innerHTML = `
+        <div class="row">
+          <div>
+            <div class="name">${p.name}</div>
+            <div class="muted">${p.tag}</div>
+          </div>
+          <div class="chip">${months}M</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div>
+          <div class="muted">Laufzeit wählen</div>
+          <div class="durationRow" role="group" aria-label="Laufzeit wählen">
+            ${DURATIONS.map(d => `
+              <button class="durBtn ${d.months===months ? "active":""}"
+                data-id="${p.id}" data-months="${d.months}">
+                ${d.label}
+              </button>
+            `).join("")}
+          </div>
+          <div class="small" style="margin-top:8px">
+            Preis basiert auf Monats-Rate + Bundle-Rabatt (Demo).
+          </div>
+        </div>
+
+        <div class="row" style="margin-top:auto">
+          <div>
+            <div class="muted">Preis</div>
+            <div class="price">${money(price)}</div>
+          </div>
+          <button class="btn primary" data-add="${p.id}">In den Warenkorb</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    }
+
+    // Wire events
+    grid.querySelectorAll("[data-id][data-months]").forEach(btn=>{
+      btn.addEventListener("click", (e)=>{
+        const id = e.currentTarget.getAttribute("data-id");
+        const m = Number(e.currentTarget.getAttribute("data-months"));
+        state.selectedDuration[id] = m;
+        renderGrid();
+      });
+    });
+
+    grid.querySelectorAll("[data-add]").forEach(btn=>{
+      btn.addEventListener("click", (e)=>{
+        const id = e.currentTarget.getAttribute("data-add");
+        const months = state.selectedDuration[id] || 1;
+        addToCart(id, months);
+      });
+    });
+  }
+
+  // --- Cart Logic ---
+  function addToCart(id, months){
+    const p = PRODUCTS.find(x=> x.id===id);
+    const key = cartKey(id, months);
+
+    const existing = state.cart.find(x=> x.key === key);
+    if(existing){
+      existing.qty += 1;
+    } else {
+      state.cart.push({
+        key, id, name:p.name, months,
+        unit: unitPrice(id, months),
+        qty: 1
+      });
+    }
+    toast(`${p.name} (${months} Monate) hinzugefügt`);
+    renderCart();
+    openCart();
+  }
+
+  function changeQty(key, delta){
+    const item = state.cart.find(x=> x.key===key);
+    if(!item) return;
+    item.qty += delta;
+    if(item.qty <= 0){
+      state.cart = state.cart.filter(x=> x.key!==key);
+    }
+    renderCart();
+  }
+
+  function removeItem(key){
+    state.cart = state.cart.filter(x=> x.key!==key);
+    renderCart();
+  }
+
+  function cartTotal(){
+    return state.cart.reduce((sum, it)=> sum + (it.unit * it.qty), 0);
+  }
+
+  function renderCart(){
+    const body = document.getElementById("cartBody");
+    const count = document.getElementById("cartCount");
+    const total = document.getElementById("total");
+
+    count.textContent = String(state.cart.reduce((s,i)=> s+i.qty, 0));
+    total.textContent = money(cartTotal());
+
+    if(state.cart.length === 0){
+      body.innerHTML = `<div class="empty">Warenkorb ist leer.<br/>Wähle oben ein Abo und lege es hinzu.</div>`;
+      return;
+    }
+
+    body.innerHTML = state.cart.map(it => `
+      <div class="cartItem">
+        <div class="row">
+          <div>
+            <div class="title">${it.name}</div>
+            <div class="meta">${it.months} Monate · Einzelpreis: ${money(it.unit)}</div>
+          </div>
+          <button class="btn danger" data-rm="${it.key}">Entfernen</button>
+        </div>
+        <div class="qtyRow">
+          <div class="muted">Menge</div>
+          <div class="qtyControls">
+            <button class="iconBtn" data-minus="${it.key}">−</button>
+            <div style="min-width:18px;text-align:center;font-weight:800">${it.qty}</div>
+            <button class="iconBtn" data-plus="${it.key}">+</button>
+          </div>
+          <div class="price">${money(it.unit * it.qty)}</div>
+        </div>
+      </div>
+    `).join("");
+
+    body.querySelectorAll("[data-plus]").forEach(b=>{
+      b.addEventListener("click", e => changeQty(e.currentTarget.getAttribute("data-plus"), +1));
+    });
+    body.querySelectorAll("[data-minus]").forEach(b=>{
+      b.addEventListener("click", e => changeQty(e.currentTarget.getAttribute("data-minus"), -1));
+    });
+    body.querySelectorAll("[data-rm]").forEach(b=>{
+      b.addEventListener("click", e => removeItem(e.currentTarget.getAttribute("data-rm")));
+    });
+  }
+
+  // --- Drawer ---
+  const overlay = document.getElementById("overlay");
+  const drawer = document.getElementById("drawer");
+  const openCart = ()=>{ overlay.classList.add("open"); drawer.classList.add("open"); };
+  const closeCart = ()=>{ overlay.classList.remove("open"); drawer.classList.remove("open"); };
+
+  document.getElementById("cartFab").addEventListener("click", openCart);
+  document.getElementById("openCartTop").addEventListener("click", openCart);
+  document.getElementById("closeCart").addEventListener("click", closeCart);
+  overlay.addEventListener("click", closeCart);
+
+  // --- Toolbar events ---
+  document.getElementById("q").addEventListener("input", (e)=>{
+    state.query = e.target.value;
+    renderGrid();
+  });
+
+  document.getElementById("sort").addEventListener("change", (e)=>{
+    state.sort = e.target.value;
+    renderGrid();
+  });
+
+  document.getElementById("currency").addEventListener("change", (e)=>{
+    state.currency = e.target.value;
+    // update unit prices in cart too
+    state.cart = state.cart.map(it => ({...it, unit: unitPrice(it.id, it.months)}));
+    renderGrid();
+    renderCart();
+  });
+
+  document.getElementById("scrollShop").addEventListener("click", ()=>{
+    document.getElementById("shop").scrollIntoView({behavior:"smooth"});
+  });
+
+  // Demo checkout
+  document.getElementById("checkout").addEventListener("click", ()=>{
+    if(state.cart.length === 0){
+      toast("Warenkorb ist leer");
+      return;
+    }
+    const lines = state.cart.map(it => `${it.qty}× ${it.name} (${it.months}M) = ${money(it.unit*it.qty)}`);
+    alert("DEMO CHECKOUT\n\n" + lines.join("\n") + "\n\nTotal: " + money(cartTotal()) + "\n\nNächster Schritt: Stripe/PayPal anbinden.");
+  });
+
+  // Initial
+  renderGrid();
+  renderCart();
+</script>
 </body>
 </html>
