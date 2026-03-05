@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Subverse</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23a78bfa'/%3E%3Cstop offset='1' stop-color='%2338bdf8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='%23111'/%3E%3Cpath d='M10 12L16 8L22 12V20L16 24L10 20Z' stroke='url(%23g)' stroke-width='2.2' fill='none'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Manrope:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css"/>
+
+  <!-- Payment & Auth SDKs (uncomment when you have keys) -->
+  <!-- <script src="https://js.stripe.com/v3/"></script> -->
+  <!-- <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID"></script> -->
+  <!-- <script src="https://accounts.google.com/gsi/client"></script> -->
+  <!-- <script src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script> -->
+</head>
+<body>
+
+  <!-- PARTICLES CANVAS -->
+  <canvas id="particles"></canvas>
+
+  <!-- AMBIENT MUSIC TOGGLE -->
+  <div class="music-toggle" id="musicToggle" title="Toggle ambient music">
+    <div class="music-bars" id="musicBars"><span></span><span></span><span></span><span></span></div>
+  </div>
+
+  <!-- SVG DEFS (shared gradients) -->
+  <svg style="position:absolute;width:0;height:0">
+    <defs>
+      <linearGradient id="lg" x1="10" y1="8" x2="22" y2="24"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#38bdf8"/></linearGradient>
+      <linearGradient id="ig" x1="10" y1="8" x2="22" y2="24"><stop stop-color="#a78bfa"/><stop offset="1" stop-color="#38bdf8"/></linearGradient>
+    </defs>
+  </svg>
+
+  <!-- INTRO -->
+  <div class="intro" id="intro"><div class="intro-c">
+    <svg class="intro-mark" width="52" height="52" viewBox="0 0 32 32" fill="none"><path d="M10 12L16 8L22 12V20L16 24L10 20Z" stroke="url(#ig)" stroke-width="2" fill="none" class="draw"/></svg>
+    <div class="intro-word">Subverse</div>
+    <div class="intro-loader"><div class="intro-fill"></div></div>
+  </div></div>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav"><div class="nav-in">
+    <a href="#" class="n-logo" onclick="event.preventDefault();window.scrollTo({top:0,behavior:'smooth'})">
+      <svg width="22" height="22" viewBox="0 0 32 32" fill="none"><path d="M10 12L16 8L22 12V20L16 24L10 20Z" stroke="url(#lg)" stroke-width="2.2" fill="none"/></svg><span>Subverse</span>
+    </a>
+    <div class="n-links" id="navLinks"><a href="#shop">Shop</a><a href="#platforms">Platforms</a><a href="#trust">Why Us</a><a href="#faq">FAQ</a></div>
+    <div class="n-right">
+      <button class="nb glow" id="adminToggle" title="Admin"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
+      <button class="nb glow" id="ownerChatToggle" title="Messages"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span class="dot-b" id="ownerChatBadge"></span></button>
+      <button class="nb" id="chatToggle" title="Chat"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span class="dot-b" id="chatBadge"></span></button>
+      <button class="nb" id="cartToggle" title="Cart"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span class="num-b" id="cartBadge"></span></button>
+      <button class="nb" id="accountToggle" title="Account"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <button class="ham" id="hamburger"><span></span><span></span></button>
+    </div>
+  </div></nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-body">
+      <p class="eyebrow">Digital Subscription Marketplace</p>
+      <h1>All your subscriptions.<br><em>One place.</em></h1>
+      <p class="hero-p">Premium digital subscriptions at unbeatable prices. Instant delivery, encrypted payments, live seller chat.</p>
+      <div class="hero-btns"><a href="#shop" class="btn btn-aurora">Browse Subscriptions</a><a href="#shop" class="btn btn-glass">Learn more ↓</a></div>
+    </div>
+    <div class="hero-nums"><div><strong>12K+</strong><small>Users</small></div><div><strong>50+</strong><small>Services</small></div><div><strong>99.9%</strong><small>Uptime</small></div></div>
+  </section>
+
+  <!-- PLATFORMS -->
+  <section class="sec" id="platforms"><div class="wrap">
+    <div class="sh"><small>Platforms</small><h2>Premium services, <em>instant access</em></h2></div>
+    <div class="plat-grid" id="platformGrid"></div>
+  </div></section>
+
+  <!-- SHOP -->
+  <section class="sec sec-alt" id="shop"><div class="wrap">
+    <div class="sh"><small>Shop</small><h2>Choose your <em>subscription</em></h2></div>
+    <div class="shop-grid" id="shopGrid"></div>
+  </div></section>
+
+  <!-- TRUST -->
+  <section class="sec" id="trust"><div class="wrap">
+    <div class="sh"><small>Why us</small><h2>Built on <em>trust</em></h2></div>
+    <div class="trust-grid">
+      <div class="t-card"><div class="t-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="url(#lg)" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><h3>Secure Payments</h3><p>256-bit encryption. Your data stays private.</p></div>
+      <div class="t-card"><div class="t-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="url(#lg)" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><h3>Instant Delivery</h3><p>Credentials within seconds after payment.</p></div>
+      <div class="t-card"><div class="t-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="url(#lg)" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>24/7 Chat Support</h3><p>Talk directly to the seller anytime.</p></div>
+      <div class="t-card"><div class="t-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="url(#lg)" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><h3>Global Access</h3><p>No region locks, worldwide availability.</p></div>
+    </div>
+  </div></section>
+
+  <!-- FAQ -->
+  <section class="sec sec-alt" id="faq"><div class="wrap">
+    <div class="sh"><small>FAQ</small><h2>Common <em>questions</em></h2></div>
+    <div class="faq-list">
+      <div class="faq-i"><button class="faq-q"><span>How do subscriptions work?</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a"><p>After purchasing, you receive credentials instantly via email and your dashboard.</p></div></div>
+      <div class="faq-i"><button class="faq-q"><span>How do I receive my account?</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a"><p>Delivered to your email and your Subverse dashboard. Usually under 60 seconds.</p></div></div>
+      <div class="faq-i"><button class="faq-q"><span>Can I get a refund?</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a"><p>24-hour refund policy for unused subscriptions. Chat with us for any issues.</p></div></div>
+      <div class="faq-i"><button class="faq-q"><span>Is it safe?</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a"><p>Bank-grade encryption, Stripe & PayPal — we never store your payment info.</p></div></div>
+      <div class="faq-i"><button class="faq-q"><span>What payment methods?</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-a"><p>Visa, Mastercard, PayPal, Apple Pay, Google Pay.</p></div></div>
+    </div>
+  </div></section>
+
+  <!-- FOOTER -->
+  <footer class="foot"><div class="wrap">
+    <div class="f-top">
+      <div class="f-brand"><a href="#" class="n-logo"><svg width="20" height="20" viewBox="0 0 32 32" fill="none"><path d="M10 12L16 8L22 12V20L16 24L10 20Z" stroke="url(#lg)" stroke-width="2.2" fill="none"/></svg><span>Subverse</span></a><p>Premium digital subscriptions, one marketplace.</p></div>
+      <div class="f-cols"><div><h4>Product</h4><a href="#shop">Shop</a><a href="#platforms">Platforms</a></div><div><h4>Company</h4><a href="#">About</a><a href="#">Blog</a></div><div><h4>Legal</h4><a href="#">Terms</a><a href="#">Privacy</a></div></div>
+    </div>
+    <div class="f-bot"><p>&copy; 2026 Subverse</p></div>
+  </div></footer>
+
+  <!-- OVERLAY --> <div class="overlay" id="overlay"></div>
+
+  <!-- CART -->
+  <aside class="drawer" id="cartDrawer">
+    <div class="dw-head"><h2>Cart</h2><button class="nb" id="cartClose"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="dw-body" id="cartItems"><div class="empty" id="cartEmpty"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><p>Your cart is empty</p></div></div>
+    <div class="dw-foot" id="cartFooter" style="display:none">
+      <div class="c-total"><span>Total</span><strong id="cartTotal">$0</strong></div>
+      <button class="btn btn-aurora full" onclick="startCheckout()">Checkout</button>
+      <div class="pay-row"><span>Visa</span><span>Mastercard</span><span>PayPal</span><span>Apple Pay</span><span>Google Pay</span></div>
+    </div>
+  </aside>
+
+  <!-- LOGIN MODAL — with Google + Apple -->
+  <div class="modal" id="loginModal"><div class="m-box">
+    <button class="m-x" id="loginClose"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <h2>Welcome back</h2><p class="m-sub">Sign in to your account</p>
+    <div class="m-form">
+      <label>Email<input type="email" id="loginEmail" placeholder="you@email.com"/></label>
+      <label>Password<input type="password" id="loginPass" placeholder="••••••••"/></label>
+      <button class="btn btn-aurora full" onclick="loginWithEmail()">Sign In</button>
+      <div class="or"><span>or continue with</span></div>
+      <!-- Google Sign-In -->
+      <button class="btn btn-w full" onclick="loginWithGoogle()">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Google
+      </button>
+      <!-- Apple Sign-In -->
+      <button class="btn btn-apple full" onclick="loginWithApple()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.32 2.32-1.55 4.3-3.74 4.25z"/></svg>
+        Apple
+      </button>
+    </div>
+  </div></div>
+
+  <!-- ADMIN AUTH -->
+  <div class="modal" id="adminAuthModal"><div class="m-box sm">
+    <button class="m-x" id="adminAuthClose"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    <div style="text-align:center;margin-bottom:18px"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="url(#lg)" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+    <h2>Admin access</h2><p class="m-sub">Enter your password</p>
+    <label><input type="password" id="adminPassInput" placeholder="Password"/></label>
+    <button class="btn btn-aurora full" onclick="verifyAdminPassword()">Unlock</button>
+    <p class="hint">Default: <code>subverse2026</code></p>
+  </div></div>
+
+  <!-- ADMIN PANEL -->
+  <div class="panel" id="adminPanel"><div class="panel-in">
+    <div class="p-bar"><h2>Admin</h2><button class="btn btn-glass btn-sm" id="adminClose">Close ×</button></div>
+    <div class="p-tabs"><button class="pt active" data-tab="products">Products</button><button class="pt" data-tab="add-product">+ Add New</button></div>
+    <div class="p-body pt-c active" id="tab-products"><div id="adminProducts"></div></div>
+    <div class="p-body pt-c" id="tab-add-product">
+      <div class="f-card"><h3>New Subscription</h3>
+        <div class="fg2"><label>Name<input type="text" id="newName" placeholder="Netflix Premium"/></label><label>Icon<input type="text" id="newIcon" placeholder="🎬" maxlength="4"/></label></div>
+        <div class="fg2"><label>Color<input type="color" id="newColor" value="#E50914"/></label><label>Label<input type="text" id="newLabel" placeholder="Stream Movies"/></label></div>
+        <label class="full">Description<textarea id="newDesc" rows="2" placeholder="What does this include?"></textarea></label>
+        <h4>Pricing</h4>
+        <div class="fg4"><label>1 mo<input type="number" id="newP1" step="0.01" placeholder="9.99"/></label><label>3 mo<input type="number" id="newP3" step="0.01" placeholder="26.99"/></label><label>6 mo<input type="number" id="newP6" step="0.01" placeholder="49.99"/></label><label>12 mo<input type="number" id="newP12" step="0.01" placeholder="89.99"/></label></div>
+        <button class="btn btn-aurora" onclick="adminAddProduct()">+ Add Product</button>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- OWNER CHAT -->
+  <div class="panel" id="ownerChatPanel"><div class="panel-in">
+    <div class="p-bar"><h2>Messages</h2><button class="btn btn-glass btn-sm" id="ownerChatClose">Close ×</button></div>
+    <div class="ch-layout">
+      <div class="ch-side" id="ownerConvoList"><div class="empty sm" id="ownerConvoEmpty">No conversations yet</div></div>
+      <div class="ch-main" id="ownerActiveChat">
+        <div class="empty" id="ownerChatPlaceholder"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><p>Select a conversation</p></div>
+        <div class="ch-view" id="ownerChatView"><div class="ch-msgs" id="ownerChatMsgs"></div><div class="ch-comp"><input type="text" id="ownerReplyInput" placeholder="Reply as seller…"/><button class="send-b" id="ownerReplySend"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div></div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- CUSTOMER CHAT -->
+  <div class="cw" id="chatWindow">
+    <div class="cw-h"><div class="cw-hl"><div class="cw-av">S</div><div><strong>Subverse</strong><span class="cw-on">Online</span></div></div><button class="nb" id="chatClose"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="cw-msgs" id="chatMessages"></div>
+    <div class="ch-comp"><input type="text" id="chatInput" placeholder="Type a message…"/><button class="send-b" id="chatSend"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- SCRIPTS — modular, separate files -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
+  <script src="particles.js"></script>
+  <script src="music.js"></script>
+  <script src="auth.js"></script>
+  <script src="payments.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
